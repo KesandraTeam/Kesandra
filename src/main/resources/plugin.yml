@@ -1,0 +1,10 @@
+name: Kesandra
+version: '${project.version}'
+main: net.lexicodes.kesandra.Kesandra
+api-version: 1.19
+authors: [ LexiCodesOfficial, Almondz ]
+description: A Mullti Purpose Server Management Plugin For Spigot And Forks Of It!
+website: https://lexicodes.net
+commands:
+  repair:
+    description: Repairs Your Tool
