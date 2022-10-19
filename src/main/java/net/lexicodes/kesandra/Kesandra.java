@@ -89,6 +89,9 @@ public final class Kesandra extends JavaPlugin {
         }
         FileConfiguration config = this.getConfig();
 
+        // general settings
+        prefix = ChatColor.translateAlternateColorCodes('&', config.getString("plugin-prefix"));
+
         customSetting = config.getBoolean("custom-setting");
         // put more settings here
 

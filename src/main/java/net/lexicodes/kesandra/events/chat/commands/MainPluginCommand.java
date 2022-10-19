@@ -54,6 +54,7 @@ public class MainPluginCommand implements CommandExecutor{
     }
 
     private void info(CommandSender sender) {
+        sender.sendMessage(ChatColor.DARK_PURPLE + "------------------------------");
         sender.sendMessage(Kesandra.prefix + ChatColor.GRAY + "Plugin Info");
         sender.sendMessage(ChatColor.DARK_PURPLE + "- " + ChatColor.GREEN + "Version " + Kesandra.getInstance().getVersion() + " - By ThirtyVirus");
         sender.sendMessage("");
@@ -66,6 +67,7 @@ public class MainPluginCommand implements CommandExecutor{
     }
 
     private void help(CommandSender sender) {
+        sender.sendMessage(ChatColor.DARK_PURPLE + "------------------------------");
         sender.sendMessage(Kesandra.prefix + ChatColor.GRAY + "Commands");
         sender.sendMessage(ChatColor.DARK_PURPLE + "- " + ChatColor.GRAY + "/template help");
         sender.sendMessage(ChatColor.DARK_PURPLE + "- " + ChatColor.GRAY + "/template info");
