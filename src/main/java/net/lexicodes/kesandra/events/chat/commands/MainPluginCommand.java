@@ -1,13 +1,11 @@
 package net.lexicodes.kesandra.events.chat.commands;
 
-import net.lexicodes.kesandra.helpers.MenuUtils;
+import net.lexicodes.kesandra.Kesandra;
+import net.lexicodes.kesandra.helpers.Utilities;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import net.lexicodes.kesandra.Kesandra;
-import net.lexicodes.kesandra.helpers.Utilities;
 
 public class MainPluginCommand implements CommandExecutor{
 
@@ -28,10 +26,6 @@ public class MainPluginCommand implements CommandExecutor{
                     break;
                 case "info":
                     info(sender);
-                    break;
-                case "tutorial":
-                    if (sender instanceof Player) MenuUtils.tutorialMenu((Player) sender);
-                    else Utilities.warnPlayer(sender, Kesandra.getPhrase("no-console-message"));
                     break;
 
                 // put plugin specific commands here
@@ -56,13 +50,14 @@ public class MainPluginCommand implements CommandExecutor{
     private void info(CommandSender sender) {
         sender.sendMessage(ChatColor.DARK_PURPLE + "------------------------------");
         sender.sendMessage(Kesandra.prefix + ChatColor.GRAY + "Plugin Info");
-        sender.sendMessage(ChatColor.DARK_PURPLE + "- " + ChatColor.GREEN + "Version " + Kesandra.getInstance().getVersion() + " - By ThirtyVirus");
-        sender.sendMessage("");
-        sender.sendMessage(ChatColor.DARK_PURPLE + "- " + ChatColor.GREEN + "~The best plugin template ever!");
-        sender.sendMessage("");
-        sender.sendMessage(ChatColor.DARK_PURPLE + "- " + ChatColor.RESET + ChatColor.RED + "" + ChatColor.BOLD + "You" + ChatColor.WHITE + ChatColor.BOLD + "Tube" + ChatColor.GREEN + " - https://youtube.com/thirtyvirus");
-        sender.sendMessage(ChatColor.DARK_PURPLE + "- " + ChatColor.RESET + ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "Twitter" + ChatColor.GREEN + " - https://twitter.com/thirtyvirus");
-        sender.sendMessage(ChatColor.DARK_PURPLE + "- " + ChatColor.RESET + ChatColor.GOLD + "" + ChatColor.BOLD + "SpigotMC" + ChatColor.GREEN + " - https://spigotmc.org/members/179587/");
+        sender.sendMessage(ChatColor.DARK_PURPLE + "- " + ChatColor.GREEN + "Version " + Kesandra.getInstance().getVersion() + " - By LexiCodes And Almondz");
+        sender.sendMessage(ChatColor.DARK_PURPLE + "------------------------------");
+    }
+
+    private void tutorial(CommandSender sender) {
+        sender.sendMessage(ChatColor.DARK_PURPLE + "------------------------------");
+        sender.sendMessage(Kesandra.prefix + ChatColor.GRAY + "Plugin Info");
+        sender.sendMessage(ChatColor.DARK_PURPLE + "- " + ChatColor.GREEN + "Version " + Kesandra.getInstance().getVersion() + " - By LexiCodes And Almondz");
         sender.sendMessage(ChatColor.DARK_PURPLE + "------------------------------");
     }
 
