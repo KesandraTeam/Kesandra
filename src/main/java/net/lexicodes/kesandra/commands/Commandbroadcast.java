@@ -20,14 +20,14 @@ public class Commandbroadcast implements CommandExecutor {
             }
             if (args.length >= 1){
                 String message = "";
-                for (int i = 0; i < args.length; i++) {
+                 for (int i = 0; i < args.length; i++) {
                     message = message + args[i] + " ";
                 }
                 if (message.length() == 0){
                     p.sendMessage(ChatColor.RED + "Correct usage: /broadcast <msg>");
                     return false;
                 }
-                Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', Kesandra.plugin.getConfig().getString("Broadcast message").replace("%message%", message)));
+                Bukkit.broadcastMessage(ChatColor.GOLD + "[Broadcast] " + ChatColor.DARK_RED + message);
                 return true;
             }
         }

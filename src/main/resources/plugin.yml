@@ -8,10 +8,12 @@ website: https://lexicodes.net
 commands:
   repair:
     description: Repairs Your Tool
-    usage: /<command>
     aliases: [fix, krepair, kfix]
 
   broadcast:
     description: broadcast
-    usage: /<command> <msg>
     aliases: [adminshout]
+
+  template:
+    description: Test Command
+    aliases: [test]
