@@ -1,19 +1,4 @@
-name: Kesandra
+name: kesandra
 version: '${project.version}'
 main: net.lexicodes.kesandra.Kesandra
-api-version: 1.13
-authors: [ LexiCodesOfficial, Almondz ]
-description: A Multi Purpose Server Management Plugin For Spigot And Forks Of It!
-website: https://lexicodes.net
-commands:
-  repair:
-    description: Repairs Your Tool
-    aliases: [fix, krepair, kfix]
-
-  broadcast:
-    description: broadcast
-    aliases: [adminshout]
-
-  template:
-    description: Test Command
-    aliases: [test]
+api-version: 1.19

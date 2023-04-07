@@ -1,18 +1,15 @@
-package net.lexicodes.kesandra.events.inventory;
+package net.lexicodes.kesandra.events.inventory
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import net.lexicodes.kesandra.helpers.Utilities;
+import net.lexicodes.kesandra.helpers.ActionSound
+import net.lexicodes.kesandra.helpers.Utilities
+import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.inventory.InventoryClickEvent
 
-import static net.lexicodes.kesandra.helpers.ActionSound.CLICK;
-
-public class InventoryClick implements Listener {
-
+class InventoryClick : Listener {
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent event) {
-        Utilities.playSound(CLICK, (Player)event.getWhoClicked());
+    fun onInventoryClick(event: InventoryClickEvent) {
+        Utilities.playSound(ActionSound.CLICK, event.whoClicked as Player)
     }
-
 }

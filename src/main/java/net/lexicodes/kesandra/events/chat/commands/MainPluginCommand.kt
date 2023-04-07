@@ -1,82 +1,75 @@
-package net.lexicodes.kesandra.events.chat.commands;
+package net.lexicodes.kesandra.events.chat.commands
 
-import net.lexicodes.kesandra.Kesandra;
-import net.lexicodes.kesandra.helpers.Utilities;
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import net.lexicodes.kesandra.Kesandra
+import net.lexicodes.kesandra.helpers.Utilities
+import org.bukkit.ChatColor
+import org.bukkit.command.Command
+import org.bukkit.command.CommandExecutor
+import org.bukkit.command.CommandSender
+import java.util.*
 
-public class MainPluginCommand implements CommandExecutor{
-
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+class MainPluginCommand : CommandExecutor {
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
 
         // verify that the user has proper permissions
         if (!sender.hasPermission("template.user")) {
-            Utilities.warnPlayer(sender, Kesandra.getPhrase("no-permissions-message"));
-            return true;
+            Utilities.warnPlayer(sender, Kesandra.Companion.getPhrase("no-permissions-message"))
+            return true
         }
-
         try {
+            when (args[0].lowercase(Locale.getDefault())) {
+                "help" -> help(sender)
+                "info" -> info(sender)
+                "reload" -> if (sender.hasPermission("template.admin")) reload(sender) else Utilities.warnPlayer(
+                    sender,
+                    Kesandra.Companion.getPhrase("no-permissions-message")
+                )
 
-            switch (args[0].toLowerCase()) {
-                case "help":
-                    help(sender);
-                    break;
-                case "info":
-                    info(sender);
-                    break;
-
-                // put plugin specific commands here
-
-                case "reload":
-                    if (sender.hasPermission("template.admin")) reload(sender);
-                    else Utilities.warnPlayer(sender, Kesandra.getPhrase("no-permissions-message"));
-                    break;
-                default:
-                    Utilities.warnPlayer(sender, Kesandra.getPhrase("not-a-command-message"));
-                    help(sender);
-                    break;
+                else -> {
+                    Utilities.warnPlayer(sender, Kesandra.Companion.getPhrase("not-a-command-message"))
+                    help(sender)
+                }
             }
-
-        } catch(Exception e) {
-            Utilities.warnPlayer(sender, Kesandra.getPhrase("formatting-error-message"));
+        } catch (e: Exception) {
+            Utilities.warnPlayer(sender, Kesandra.Companion.getPhrase("formatting-error-message"))
         }
-
-        return true;
+        return true
     }
 
-    private void info(CommandSender sender) {
-        sender.sendMessage(ChatColor.DARK_PURPLE + "------------------------------");
-        sender.sendMessage(Kesandra.prefix + ChatColor.GRAY + "Plugin Info");
-        sender.sendMessage(ChatColor.DARK_PURPLE + "- " + ChatColor.GREEN + "Version " + Kesandra.getInstance().getVersion() + " - By LexiCodes And Almondz");
-        sender.sendMessage(ChatColor.DARK_PURPLE + "------------------------------");
+    private fun info(sender: CommandSender) {
+        sender.sendMessage(ChatColor.DARK_PURPLE.toString() + "------------------------------")
+        sender.sendMessage(Kesandra.Companion.prefix + ChatColor.GRAY + "Plugin Info")
+        sender.sendMessage(
+            ChatColor.DARK_PURPLE.toString() + "- " + ChatColor.GREEN + "Version " + Kesandra.Companion.getInstance()
+                .getVersion() + " - By LexiCodes And Almondz"
+        )
+        sender.sendMessage(ChatColor.DARK_PURPLE.toString() + "------------------------------")
     }
 
-    private void tutorial(CommandSender sender) {
-        sender.sendMessage(ChatColor.DARK_PURPLE + "------------------------------");
-        sender.sendMessage(Kesandra.prefix + ChatColor.GRAY + "Plugin Info");
-        sender.sendMessage(ChatColor.DARK_PURPLE + "- " + ChatColor.GREEN + "Version " + Kesandra.getInstance().getVersion() + " - By LexiCodes And Almondz");
-        sender.sendMessage(ChatColor.DARK_PURPLE + "------------------------------");
+    private fun tutorial(sender: CommandSender) {
+        sender.sendMessage(ChatColor.DARK_PURPLE.toString() + "------------------------------")
+        sender.sendMessage(Kesandra.Companion.prefix + ChatColor.GRAY + "Plugin Info")
+        sender.sendMessage(
+            ChatColor.DARK_PURPLE.toString() + "- " + ChatColor.GREEN + "Version " + Kesandra.Companion.getInstance()
+                .getVersion() + " - By LexiCodes And Almondz"
+        )
+        sender.sendMessage(ChatColor.DARK_PURPLE.toString() + "------------------------------")
     }
 
-    private void help(CommandSender sender) {
-        sender.sendMessage(ChatColor.DARK_PURPLE + "------------------------------");
-        sender.sendMessage(Kesandra.prefix + ChatColor.GRAY + "Commands");
-        sender.sendMessage(ChatColor.DARK_PURPLE + "- " + ChatColor.GRAY + "/template help");
-        sender.sendMessage(ChatColor.DARK_PURPLE + "- " + ChatColor.GRAY + "/template info");
-        sender.sendMessage(ChatColor.DARK_PURPLE + "- " + ChatColor.GRAY + "/template tutorial");
-        sender.sendMessage(ChatColor.DARK_PURPLE + "- " + ChatColor.GRAY + "/template reload");
-        sender.sendMessage(ChatColor.DARK_PURPLE + "------------------------------");
+    private fun help(sender: CommandSender) {
+        sender.sendMessage(ChatColor.DARK_PURPLE.toString() + "------------------------------")
+        sender.sendMessage(Kesandra.Companion.prefix + ChatColor.GRAY + "Commands")
+        sender.sendMessage(ChatColor.DARK_PURPLE.toString() + "- " + ChatColor.GRAY + "/template help")
+        sender.sendMessage(ChatColor.DARK_PURPLE.toString() + "- " + ChatColor.GRAY + "/template info")
+        sender.sendMessage(ChatColor.DARK_PURPLE.toString() + "- " + ChatColor.GRAY + "/template tutorial")
+        sender.sendMessage(ChatColor.DARK_PURPLE.toString() + "- " + ChatColor.GRAY + "/template reload")
+        sender.sendMessage(ChatColor.DARK_PURPLE.toString() + "------------------------------")
     }
 
-    private void reload(CommandSender sender) {
-        Kesandra.getInstance().reloadConfig();
-        Kesandra.getInstance().loadConfiguration();
-        Kesandra.getInstance().loadLangFile();
-
-        Utilities.informPlayer(sender, "configuration, values, and language settings reloaded");
+    private fun reload(sender: CommandSender) {
+        Kesandra.Companion.getInstance().reloadConfig()
+        Kesandra.Companion.getInstance().loadConfiguration()
+        Kesandra.Companion.getInstance().loadLangFile()
+        Utilities.informPlayer(sender, "configuration, values, and language settings reloaded")
     }
-
 }

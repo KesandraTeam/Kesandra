@@ -1,156 +1,164 @@
-package net.lexicodes.kesandra.helpers;
+package net.lexicodes.kesandra.helpers
 
-import com.google.common.io.ByteStreams;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.*;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
-import net.lexicodes.API.multiversion.Sound;
-import net.lexicodes.API.multiversion.Version;
-import net.lexicodes.API.multiversion.XMaterial;
-import net.lexicodes.kesandra.Kesandra;
+import com.google.common.io.ByteStreams
+import net.lexicodes.API.multiversion.*
+import net.lexicodes.API.multiversion.Sound
+import net.lexicodes.kesandra.Kesandra
+import org.bukkit.*
+import org.bukkit.block.Block
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
+import org.bukkit.plugin.Plugin
+import java.io.File
+import java.io.FileOutputStream
+import java.util.*
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.*;
-
-public final class Utilities {
-
+object Utilities {
     // list of transparent blocks to be ignored when a player looks at a block
-    private static final Set<Material> TRANSPARENT = EnumSet.of(XMaterial.AIR.parseMaterial(), XMaterial.BLACK_CARPET.parseMaterial(), XMaterial.BLUE_CARPET.parseMaterial(),
-            XMaterial.BROWN_CARPET.parseMaterial(), XMaterial.CYAN_CARPET.parseMaterial(), XMaterial.GRAY_CARPET.parseMaterial(), XMaterial.GREEN_CARPET.parseMaterial(), XMaterial.LIGHT_BLUE_CARPET.parseMaterial(),
-            XMaterial.LIME_CARPET.parseMaterial(), XMaterial.MAGENTA_CARPET.parseMaterial(), XMaterial.ORANGE_CARPET.parseMaterial(), XMaterial.PINK_CARPET.parseMaterial(), XMaterial.PURPLE_CARPET.parseMaterial(),
-            XMaterial.RED_CARPET.parseMaterial(), XMaterial.WHITE_CARPET.parseMaterial(), XMaterial.YELLOW_CARPET.parseMaterial());
+    private val TRANSPARENT: Set<Material?> = EnumSet.of(
+        XMaterial.AIR.parseMaterial(),
+        XMaterial.BLACK_CARPET.parseMaterial(),
+        XMaterial.BLUE_CARPET.parseMaterial(),
+        XMaterial.BROWN_CARPET.parseMaterial(),
+        XMaterial.CYAN_CARPET.parseMaterial(),
+        XMaterial.GRAY_CARPET.parseMaterial(),
+        XMaterial.GREEN_CARPET.parseMaterial(),
+        XMaterial.LIGHT_BLUE_CARPET.parseMaterial(),
+        XMaterial.LIME_CARPET.parseMaterial(),
+        XMaterial.MAGENTA_CARPET.parseMaterial(),
+        XMaterial.ORANGE_CARPET.parseMaterial(),
+        XMaterial.PINK_CARPET.parseMaterial(),
+        XMaterial.PURPLE_CARPET.parseMaterial(),
+        XMaterial.RED_CARPET.parseMaterial(),
+        XMaterial.WHITE_CARPET.parseMaterial(),
+        XMaterial.YELLOW_CARPET.parseMaterial()
+    )
 
     // list of all supported inventory blocks in the plugin
-    public static final List<Material> INVENTORY_BLOCKS = Arrays.asList(XMaterial.CHEST.parseMaterial(),XMaterial.TRAPPED_CHEST.parseMaterial(), XMaterial.ENDER_CHEST.parseMaterial(), XMaterial.SHULKER_BOX.parseMaterial(), XMaterial.BLACK_SHULKER_BOX.parseMaterial(),
-            XMaterial.BLUE_SHULKER_BOX.parseMaterial(), XMaterial.BROWN_SHULKER_BOX.parseMaterial(), XMaterial.CYAN_SHULKER_BOX.parseMaterial(), XMaterial.GRAY_SHULKER_BOX.parseMaterial(),
-            XMaterial.GREEN_SHULKER_BOX.parseMaterial(), XMaterial.LIGHT_BLUE_SHULKER_BOX.parseMaterial(), XMaterial.LIGHT_GRAY_SHULKER_BOX.parseMaterial(), XMaterial.LIME_SHULKER_BOX.parseMaterial(),
-            XMaterial.MAGENTA_SHULKER_BOX.parseMaterial(), XMaterial.ORANGE_SHULKER_BOX.parseMaterial(), XMaterial.PINK_SHULKER_BOX.parseMaterial(), XMaterial.PURPLE_SHULKER_BOX.parseMaterial(),
-            XMaterial.RED_SHULKER_BOX.parseMaterial(), XMaterial.WHITE_SHULKER_BOX.parseMaterial(), XMaterial.YELLOW_SHULKER_BOX.parseMaterial());
-
-    private static Map<Player, Long> mostRecentSelect = new HashMap<>();
+    val INVENTORY_BLOCKS = Arrays.asList(
+        XMaterial.CHEST.parseMaterial(),
+        XMaterial.TRAPPED_CHEST.parseMaterial(),
+        XMaterial.ENDER_CHEST.parseMaterial(),
+        XMaterial.SHULKER_BOX.parseMaterial(),
+        XMaterial.BLACK_SHULKER_BOX.parseMaterial(),
+        XMaterial.BLUE_SHULKER_BOX.parseMaterial(),
+        XMaterial.BROWN_SHULKER_BOX.parseMaterial(),
+        XMaterial.CYAN_SHULKER_BOX.parseMaterial(),
+        XMaterial.GRAY_SHULKER_BOX.parseMaterial(),
+        XMaterial.GREEN_SHULKER_BOX.parseMaterial(),
+        XMaterial.LIGHT_BLUE_SHULKER_BOX.parseMaterial(),
+        XMaterial.LIGHT_GRAY_SHULKER_BOX.parseMaterial(),
+        XMaterial.LIME_SHULKER_BOX.parseMaterial(),
+        XMaterial.MAGENTA_SHULKER_BOX.parseMaterial(),
+        XMaterial.ORANGE_SHULKER_BOX.parseMaterial(),
+        XMaterial.PINK_SHULKER_BOX.parseMaterial(),
+        XMaterial.PURPLE_SHULKER_BOX.parseMaterial(),
+        XMaterial.RED_SHULKER_BOX.parseMaterial(),
+        XMaterial.WHITE_SHULKER_BOX.parseMaterial(),
+        XMaterial.YELLOW_SHULKER_BOX.parseMaterial()
+    )
+    private val mostRecentSelect: Map<Player, Long> = HashMap()
 
     // load file from JAR with comments
-    public static File loadResource(Plugin plugin, String resource) {
-        File folder = plugin.getDataFolder();
-        if (!folder.exists())
-            folder.mkdir();
-        File resourceFile = new File(folder, resource);
+    fun loadResource(plugin: Plugin, resource: String?): File {
+        val folder = plugin.dataFolder
+        if (!folder.exists()) folder.mkdir()
+        val resourceFile = File(folder, resource)
         try {
             if (!resourceFile.exists()) {
-                resourceFile.createNewFile();
-                try (InputStream in = plugin.getResource(resource);
-                     OutputStream out = new FileOutputStream(resourceFile)) {
-                    ByteStreams.copy(in, out);
-                }
+                resourceFile.createNewFile()
+                plugin.getResource(resource!!)
+                    .use { `in` -> FileOutputStream(resourceFile).use { out -> ByteStreams.copy(`in`, out) } }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-        return resourceFile;
+        return resourceFile
     }
 
     // convert a location to formatted string (world,x,y,z)
-    public static String toLocString(Location location) {
-        if (location == null) return "";
-        return location.getWorld().getName() + "," + (int)location.getX() + "," + (int)location.getY() + "," + (int)location.getZ();
+    fun toLocString(location: Location?): String {
+        return if (location == null) "" else location.world.name + "," + location.x.toInt() + "," + location.y.toInt() + "," + location.z.toInt()
     }
 
     // renames item
-    public static ItemStack nameItem(ItemStack item, String name) {
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(name);
-        item.setItemMeta(meta);
-        return item;
+    fun nameItem(item: ItemStack, name: String?): ItemStack {
+        val meta = item.itemMeta
+        meta.setDisplayName(name)
+        item.itemMeta = meta
+        return item
     }
 
     // creates item that is renamed given material and name
-    public static ItemStack nameItem(Material item, String name) {
-        return nameItem(new ItemStack(item), name);
+    fun nameItem(item: Material?, name: String?): ItemStack {
+        return nameItem(ItemStack(item!!), name)
     }
 
     // set the lore of an item
-    public static ItemStack loreItem(ItemStack item, List<String> lore) {
-        ItemMeta meta = item.getItemMeta();
-
-        meta.setLore(lore);
-        item.setItemMeta(meta);
-        return item;
+    fun loreItem(item: ItemStack, lore: List<String?>?): ItemStack {
+        val meta = item.itemMeta
+        meta.lore = lore
+        item.itemMeta = meta
+        return item
     }
 
     // makes visible string invisible to player
-    public static String convertToInvisibleString(String s) {
-        if (Version.getVersion().isBiggerThan(Version.v1_15)) return s; // HOTFIX to prevent invisible text being garbled by 1.16 changes
-        StringBuilder hidden = new StringBuilder();
-        for (char c : s.toCharArray()) hidden.append(ChatColor.COLOR_CHAR + "").append(c);
-        return hidden.toString();
+    fun convertToInvisibleString(s: String): String {
+        if (Version.Companion.getVersion()
+                .isBiggerThan(Version.v1_15)
+        ) return s // HOTFIX to prevent invisible text being garbled by 1.16 changes
+        val hidden = StringBuilder()
+        for (c in s.toCharArray()) hidden.append(ChatColor.COLOR_CHAR.toString() + "").append(c)
+        return hidden.toString()
     }
 
     // make invisible string visible to player
-    public static String convertToVisibleString(String s) {
-        if (Version.getVersion().isBiggerThan(Version.v1_15)) return s; // HOTFIX to prevent invisible text being garbled by 1.16 changes
-        String c = "";
-        c = c + ChatColor.COLOR_CHAR;
-        return s.replaceAll(c, "");
+    fun convertToVisibleString(s: String): String {
+        if (Version.Companion.getVersion()
+                .isBiggerThan(Version.v1_15)
+        ) return s // HOTFIX to prevent invisible text being garbled by 1.16 changes
+        var c = ""
+        c = c + ChatColor.COLOR_CHAR
+        return s.replace(c.toRegex(), "")
     }
 
     // warns player of something in plugin
-    public static void warnPlayer(CommandSender sender, List<String> messages) {
-        if (sender instanceof Player) { Player player = (Player) sender; playSound(ActionSound.ERROR, player); }
-        for (String message : messages) sender.sendMessage(Kesandra.prefix + ChatColor.RESET + ChatColor.RED + message);
+    fun warnPlayer(sender: CommandSender, messages: List<String>) {
+        if (sender is Player) {
+            playSound(ActionSound.ERROR, sender)
+        }
+        for (message in messages) sender.sendMessage(Kesandra.Companion.prefix + ChatColor.RESET + ChatColor.RED + message)
     }
-    public static void warnPlayer(CommandSender sender, String message) {
-        warnPlayer(sender, Collections.singletonList(message));
+
+    fun warnPlayer(sender: CommandSender?, message: String?) {
+        warnPlayer(sender, listOf(message))
     }
 
     // informs player of something in plugin
-    public static void informPlayer(CommandSender sender, List<String> messages) {
-        for (String message : messages) sender.sendMessage(Kesandra.prefix + ChatColor.RESET + ChatColor.GRAY + message);
+    fun informPlayer(sender: CommandSender, messages: List<String>) {
+        for (message in messages) sender.sendMessage(Kesandra.Companion.prefix + ChatColor.RESET + ChatColor.GRAY + message)
     }
-    public static void informPlayer(CommandSender sender, String message) {
-        informPlayer(sender, Collections.singletonList(message));
+
+    fun informPlayer(sender: CommandSender?, message: String) {
+        informPlayer(sender!!, listOf(message))
     }
 
     // return the block the player is looking at, ignoring transparent blocks
-    public static Block getBlockLookingAt(Player player) {
-        return player.getTargetBlock(TRANSPARENT, 120);
+    fun getBlockLookingAt(player: Player): Block {
+        return player.getTargetBlock(TRANSPARENT, 120)
     }
 
     // play sound at player (version independent)
-    public static void playSound(ActionSound sound, Player player) {
-
-        switch (sound) {
-            case OPEN:
-                Sound.CHEST_OPEN.playSound(player);
-                break;
-            case MODIFY:
-                Sound.ANVIL_USE.playSound(player);
-                break;
-            case SELECT:
-                Sound.LEVEL_UP.playSound(player);
-                break;
-            case CLICK:
-                Sound.CLICK.playSound(player);
-                break;
-            case POP:
-                Sound.CHICKEN_EGG_POP.playSound(player);
-                break;
-            case BREAK:
-                Sound.ANVIL_LAND.playSound(player);
-                break;
-            case ERROR:
-                Sound.BAT_DEATH.playSound(player);
-                break;
+    fun playSound(sound: ActionSound?, player: Player) {
+        when (sound) {
+            ActionSound.OPEN -> Sound.CHEST_OPEN.playSound(player)
+            ActionSound.MODIFY -> Sound.ANVIL_USE.playSound(player)
+            ActionSound.SELECT -> Sound.LEVEL_UP.playSound(player)
+            ActionSound.CLICK -> Sound.CLICK.playSound(player)
+            ActionSound.POP -> Sound.CHICKEN_EGG_POP.playSound(player)
+            ActionSound.BREAK -> Sound.ANVIL_LAND.playSound(player)
+            ActionSound.ERROR -> Sound.BAT_DEATH.playSound(player)
         }
-
     }
-
 }

@@ -1,11 +1,5 @@
-package net.lexicodes.kesandra.helpers;
+package net.lexicodes.kesandra.helpers
 
-public enum ActionSound {
-    OPEN,
-    MODIFY,
-    SELECT,
-    CLICK,
-    POP,
-    BREAK,
-    ERROR
+enum class ActionSound {
+    OPEN, MODIFY, SELECT, CLICK, POP, BREAK, ERROR
 }
